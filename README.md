@@ -1,280 +1,240 @@
-# DF-EL++
-This repository provides the code, data, and experimental details for the KDD 2026 paper: "Fast and Faithful: Scalable Neuro-Symbolic Learning and Reasoning with Differentiable Fuzzy EL++".
+### 📝 Note for Reviewers
 
-## Overview
-This work introduces DF-EL++, the first end-to-end differentiable framework that unifies PTIME-complete reasoning with neural learning, resolving the persistent trade-off between logical rigor and computational scale in neuro-symbolic AI.
+<div style="background-color: #f0f7ff; border-left: 4px solid #0969da; padding: 12px; margin: 20px 0;">
+<strong>📁 Extended Materials:</strong> The <code>src/</code> directory contains an extended version of the main submission (<code>Extended_Version_of_KDD2026_id385.pdf</code>) with supplementary materials for the Semantic Image Interpretation (SII) task, including additional experimental details and results.
+</div>
 
-Our framework operates as a principled refinement engine: a neural network first grounds symbols by producing an initial, uncertain fuzzy knowledge base from data. DF-EL++ then uses gradient-based optimization to repair and refine these beliefs, ensuring they cohere with an ontology's logical constraints while preserving high-confidence empirical evidence. This creates a virtuous cycle where perception is disciplined by logic, and logic is grounded in data .
+---
 
-Validated on massive, real-world ontologies like SNOMED CT (377K concepts), DF-EL++ demonstrates a unique synergy of scale and performance: it remains computationally efficient where expressive systems fail, while decisively outperforming dominant scalable baselines in a range of knowledge base completion tasks with up to a 42% relative improvement in Hits@1.
+# DF-EL++ 🚀
 
-## Details for Reproduction
+[![Python](https://img.shields.io/badge/Python-3.7%2B-blue.svg)](https://www.python.org/downloads/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-1.12%2B-red.svg)](https://pytorch.org/)
+[![CUDA](https://img.shields.io/badge/CUDA-11.6%2B-green.svg)](https://developer.nvidia.com/cuda-toolkit)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## Dependencies
-All experiments were conducted on servers equipped with NVIDIA RTX 3090 GPUs. The framework is implemented in PyTorch and requires the following dependencies:
-    
-    JDK 1.8
-    Python: 3.7.0+
-    PyTorch: 1.12
-    CUDA: 11.6
-    NumPy: 1.21.4
-    Pandas: 1.1.3
-    Matplotlib: 3.3.2
-    python-csv: 0.0.13
-    pickle: 4.0
-    pyparsing: 3.0.6
-    loguru: 0.6.0
+> **Fast and Faithful: Scalable Neuro-Symbolic Learning and Reasoning with Differentiable Fuzzy EL++**  
+> *KDD 2026*
 
-### Normalization of EL++ ontologies
+This repository provides a from-scratch PyTorch implementation of the DF-EL++ framework, designed to be a faithful reproduction of the paper's methodology.
 
-The input EL++ ontology must be normalized before training. This process does not truncate the logic but instead systematically decomposes complex axioms into a set of elementary "normal forms" (NF1-NF6). Each normal form contains at most one logical operator beyond subsumption, which is a necessary precondition for stable and effective gradient-based learning. This transformation preserves the original semantics of the ontology.
 
-To run the normalization on your ontology, use the following script with **JDK 1.8**:
-    
-    java -jar Normalization.jar training/ontologies training/input
+## 📋 Overview
 
-The output of preprocessing is the files in 'training/input':
+<div align="center">
+  <img src="./images/flowchart1.png" alt="DF-EL++ Framework Overview" width="85%">
+  <p><em>Figure 1: The DF-EL++ framework operates as a principled refinement engine, using logical constraints to improve the output of neural perception models.</em></p>
+</div>
 
-- 'concepts.txt', 'roles.txt', 'individuals.txt': the concept names(/role names/individual names) set.
-- 'normalization.txt': the nomalized TBox axioms.
-- 'abox.txt': the abox assertions.
-- 'subclassaixoms.txt': the original TBox axioms.
+**DF-EL++** is the first end-to-end differentiable framework that unifies PTIME-complete reasoning with neural learning, resolving the persistent trade-off between logical rigor and computational scale in neuro-symbolic AI.
 
-Note: The source code of 'Normalization.jar' and 'CQGenerator.jar' is in [normalization](https://github.com/AnonymousResearcherOpen/NeSyALC/tree/main/normalization). If you want to repackage the jar based on our source code, remember to delete all dependencies named 'owlapi-xxx.jar' in the artifact, while only remain the 'owlapi-distribution-5.1.3.jar'.
+### 🎯 Key Features
 
-## Training
-### Knowledge Base Completion (KBC) Training
-The KBC task evaluates a model's ability to predict missing axioms in an ontology. All models are trained using the Adam optimizer with early stopping based on validation MRR (patience: 10 epochs).
+- ✨ **Pure Python & PyTorch**: A clean, modern implementation with no external language dependencies
+- 🔄 **Principled Refinement Engine**: Neural networks produce initial fuzzy knowledge bases, refined through gradient-based optimization
+- 📈 **Massive Scale**: Validated on ontologies like SNOMED CT with **377K concepts**
+- 🏆 **State-of-the-art Performance**: Achieves up to **42% relative improvement** in Hits@1 on KBC tasks
 
-### Training DF-EL++ on SNOMED CT
-    
-    python train_kbc.py \
-    --dataset SNOMED_CT \
-    --model_name DF-EL++ \
-    --learning_rate 2e-4 \
+---
+
+## 🛠️ Installation & Setup
+
+### Prerequisites
+
+The framework is built entirely in Python. All experiments were designed to be run on servers equipped with NVIDIA GPUs.
+
+| Component | Version | Purpose |
+|:----------|:--------|:--------|
+| **Hardware** | NVIDIA RTX 3090+ | Recommended for GPU acceleration |
+| **Python** | 3.7.0+ | Core framework language |
+| **PyTorch** | 1.12+ | Deep learning backend |
+| **CUDA** | 11.6+ | For GPU support |
+
+### Dependencies
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/your-username/DF-EL-plus-plus.git
+cd DF-EL-plus-plus
+
+# 2. Install Python dependencies
+pip install -r requirements.txt
+```
+
+<details>
+<summary>📦 Full Dependency List</summary>
+
+```
+torch>=1.12.0
+numpy>=1.21.4
+pandas>=1.1.3
+matplotlib>=3.3.2
+scikit-learn>=0.24.0
+tqdm>=4.62.0
+loguru>=0.6.0
+pyparsing>=3.0.6
+```
+
+</details>
+
+---
+
+## 🔧 Data Preprocessing
+
+### Normalization of EL++ Ontologies
+
+The input EL++ ontology must first be normalized. Our Python script systematically decomposes complex axioms into elementary "normal forms" (NF1-NF6), preserving the original semantics while enabling stable gradient-based learning.
+
+```bash
+# Run the Python-based normalization script
+python preprocess.py \
+    --input_ontology ontologies/snomed.owl \
+    --output_dir data/snomed_normalized
+```
+
+#### 📁 Output Structure
+
+The script will create a directory containing the processed data, split into training, validation, and test sets.
+
+```
+data/snomed_normalized/
+├── concepts.txt          # Concept names
+├── roles.txt            # Role names
+├── individuals.txt      # Individual names
+├── train.txt           # 80% of normalized axioms
+├── valid.txt           # 10% of normalized axioms
+└── test.txt            # 10% of normalized axioms
+```
+
+---
+
+## 🚀 Training & Evaluation
+
+### 📊 Knowledge Base Completion (KBC)
+
+This task evaluates the model's ability to predict missing axioms in an ontology.
+
+#### 1. Training
+
+Use `train_kbc.py` to train a model on a preprocessed dataset. The best model checkpoint will be saved based on validation MRR.
+
+```bash
+# Example: Training DF-EL++ on SNOMED CT
+python train_kbc.py \
+    --data_path data/snomed_normalized \
     --embedding_dim 200 \
     --batch_size 512 \
-    --l2_lambda 1e-5 \
-    --negative_samples 50
-
-### Training Baseline Models
-The same script is used for training baselines by changing the --model_name parameter.
-### Example: Training Box2EL on Gene Ontology (GO)
-    python train_kbc.py \
-    --dataset GO \
-    --model_name Box2EL \
-    --learning_rate 2e-4 \
-    --embedding_dim 200 \
-    --batch_size 1024 \
-    --l2_lambda 1e-5 \
-    --negative_samples 50
-
-### Semantic Image Interpretation (SII) Training
-The SII task evaluates the framework's ability to refine noisy outputs from a pre-trained perception model (FR-CNN) to be consistent with a domain ontology.
-### Training DF-EL++ for SII
-    python train_sii.py \
-    --dataset PASCAL_PART \
-    --model_name DF-EL++ \
-    --learning_rate 1e-4 \
-    --max_epochs 50
-### Additional Training Examples
-for dataset in SNOMED_CT GO Yeast_PPI Human_PPI; do
-    
-    python train_kbc.py \
-    --dataset $dataset \
-    --model_name DF-EL++ \
-    --learning_rate 2e-4 \
-    --embedding_dim 200 \
-    --batch_size $([ "$dataset" = "SNOMED_CT" ] && echo 512 || echo 1024) \
-    --l2_lambda 1e-5 \
-    --negative_samples 50
-
-done
-
-# Train on all SII datasets
-for dataset in PASCAL_PART ADE20K PartImageNet; do
-    
-    python train_sii.py \
-    --dataset $dataset \
-    --model_name DF-EL++ \
-    --learning_rate 1e-4 \
-    --max_epochs 50
-
-done
-
-#### KBC Task Settings
-
-| Parameter | Search Space | Optimal (DF-EL++) |
-|-----------|-------------|-------------------|
-| Optimizer | - | Adam |
-| Learning Rate | {1e-4, 2e-4, 5e-4} | 2e-4 |
-| Embedding Dimension | {100, 200, 400} | 200 |
-| Batch Size | {256, 512, 1024} | 512 (SNOMED CT) / 1024 (others) |
-| L2 Regularization (λ) | - | 1e-5 |
-| Negative Samples | - | 50 |
-| Margin (δ) | - | 1.0 |
-| Loss Function | - | Self-adversarial negative sampling |
-| Early Stopping | - | 10 epochs (patience on val MRR) |
-
-#### SII Task Settings
-
-| Parameter | Configuration | Notes |
-|-----------|---------------|-------|
-| Optimizer | Adam | For refinement stage |
-| Learning Rate | 1e-4 | Selected from {1e-5, 1e-4, 5e-4} |
-| Max Epochs | 50 | Per image refinement |
-| Perception Model | Fast R-CNN (ResNet-50) | Pre-trained backbone |
-| Input | FR-CNN detections | Initial fuzzy beliefs |
-| Task Type | Fuzzy belief optimization | Logical consistency refinement |
-
-
-# DF-EL++
-
-This repository provides the code, data, and experimental details for the KDD 2026 paper: "Fast and Faithful: Scalable Neuro-Symbolic Learning and Reasoning with Differentiable Fuzzy EL++".
-
-## Overview
-
-This work introduces DF-EL++, the first end-to-end differentiable framework that unifies PTIME-complete reasoning with neural learning, resolving the persistent trade-off between logical rigor and computational scale in neuro-symbolic AI.
-
-Our framework operates as a principled refinement engine: a neural network first grounds symbols by producing an initial, uncertain fuzzy knowledge base from data. DF-EL++ then uses gradient-based optimization to repair and refine these beliefs, ensuring they cohere with an ontology's logical constraints while preserving high-confidence empirical evidence. This creates a virtuous cycle where perception is disciplined by logic, and logic is grounded in data.
-
-Validated on massive, real-world ontologies like SNOMED CT (377K concepts), DF-EL++ demonstrates a unique synergy of scale and performance: it remains computationally efficient where expressive systems fail, while decisively outperforming dominant scalable baselines in a range of knowledge base completion tasks with up to a 42% relative improvement in Hits@1.
-
-## Details for Reproduction
-
-## Dependencies
-
-All experiments were conducted on servers equipped with NVIDIA RTX 3090 GPUs. The framework is implemented in PyTorch and requires the following dependencies:
-
-- JDK 1.8
-- Python: 3.7.0+
-- PyTorch: 1.12
-- CUDA: 11.6
-- NumPy: 1.21.4
-- Pandas: 1.1.3
-- Matplotlib: 3.3.2
-- python-csv: 0.0.13
-- pickle: 4.0
-- pyparsing: 3.0.6
-- loguru: 0.6.0
-
-### Normalization of EL++ ontologies
-
-The input EL++ ontology must be normalized before training. This process does not truncate the logic but instead systematically decomposes complex axioms into a set of elementary "normal forms" (NF1-NF6). Each normal form contains at most one logical operator beyond subsumption, which is a necessary precondition for stable and effective gradient-based learning. This transformation preserves the original semantics of the ontology.
-
-To run the normalization on your ontology, use the following script with **JDK 1.8**:
-
-```bash
-java -jar Normalization.jar training/ontologies training/input
+    --save_dir checkpoints/snomed
 ```
 
-The output of preprocessing is the files in `training/input`:
-
-- `concepts.txt`, `roles.txt`, `individuals.txt`: the concept names(/role names/individual names) set.
-- `normalization.txt`: the nomalized TBox axioms.
-- `abox.txt`: the abox assertions.
-- `subclassaixoms.txt`: the original TBox axioms.
-
-**Note:** The source code of `Normalization.jar` and `CQGenerator.jar` is in [normalization](https://github.com/AnonymousResearcherOpen/NeSyALC/tree/main/normalization). If you want to repackage the jar based on our source code, remember to delete all dependencies named `owlapi-xxx.jar` in the artifact, while only remain the `owlapi-distribution-5.1.3.jar`.
-
-## Training
-
-### Knowledge Base Completion (KBC) Training
-
-The KBC task evaluates a model's ability to predict missing axioms in an ontology. All models are trained using the Adam optimizer with early stopping based on validation MRR (patience: 10 epochs).
-
-#### Training DF-EL++ on SNOMED CT
+<details>
+<summary>🔧 Advanced Training Options</summary>
 
 ```bash
 python train_kbc.py \
-  --dataset SNOMED_CT \
-  --model_name DF-EL++ \
-  --learning_rate 2e-4 \
-  --embedding_dim 200 \
-  --batch_size 512 \
-  --l2_lambda 1e-5 \
-  --negative_samples 50
+    --data_path data/snomed_normalized \
+    --embedding_dim 200 \
+    --batch_size 512 \
+    --learning_rate 2e-4 \
+    --l2_lambda 1e-5 \
+    --negative_samples 50 \
+    --max_epochs 100 \
+    --patience 10 \
+    --save_dir checkpoints/snomed
 ```
 
-### Training Baseline Models
+</details>
 
-The same script is used for training baselines by changing the `--model_name` parameter.
+#### 2. Evaluation
 
-#### Example: Training Box2EL on Gene Ontology (GO)
+Use `evaluate_kbc.py` to evaluate a trained checkpoint on the test set.
 
 ```bash
-python train_kbc.py \
-  --dataset GO \
-  --model_name Box2EL \
-  --learning_rate 2e-4 \
-  --embedding_dim 200 \
-  --batch_size 1024 \
-  --l2_lambda 1e-5 \
-  --negative_samples 50
+python evaluate_kbc.py \
+    --model_path checkpoints/snomed/best_model.pt \
+    --data_path data/snomed_normalized
 ```
 
-### Semantic Image Interpretation (SII) Training
+### 🖼️ Semantic Image Interpretation (SII)
 
-The SII task evaluates the framework's ability to refine noisy outputs from a pre-trained perception model (FR-CNN) to be consistent with a domain ontology.
+This task refines noisy outputs from perception models to ensure logical consistency.
 
-#### Training DF-EL++ for SII
+#### 1. Training (Refinement)
+
+The `train_sii.py` script simulates the output of a perception model and uses the DF-EL++ framework to refine the noisy beliefs according to an ontology.
 
 ```bash
+# Example: Refining beliefs for the PASCAL_PART ontology
 python train_sii.py \
-  --dataset PASCAL_PART \
-  --model_name DF-EL++ \
-  --learning_rate 1e-4 \
-  --max_epochs 50
+    --data_path data/pascal_part_normalized
 ```
 
-### Additional Training Examples
+#### 2. Evaluation
+
+The `evaluate_sii.py` script assesses the quality of the refined beliefs using classification and logical consistency metrics.
 
 ```bash
-# Train on all KBC datasets
-for dataset in SNOMED_CT GO Yeast_PPI Human_PPI; do
-  python train_kbc.py \
-    --dataset $dataset \
-    --model_name DF-EL++ \
-    --learning_rate 2e-4 \
-    --embedding_dim 200 \
-    --batch_size $([ "$dataset" = "SNOMED_CT" ] && echo 512 || echo 1024) \
-    --l2_lambda 1e-5 \
-    --negative_samples 50
-done
-
-# Train on all SII datasets
-for dataset in PASCAL_PART ADE20K PartImageNet; do
-  python train_sii.py \
-    --dataset $dataset \
-    --model_name DF-EL++ \
-    --learning_rate 1e-4 \
-    --max_epochs 50
-done
+python evaluate_sii.py \
+    --data_path data/pascal_part_normalized
 ```
 
-## Hyperparameter Settings
+---
 
-### KBC Task Settings
+## ⚙️ Hyperparameter Configuration
 
-| Parameter | Search Space | Optimal (DF-EL++) |
-|-----------|-------------|-------------------|
-| Optimizer | - | Adam |
-| Learning Rate | {1e-4, 2e-4, 5e-4} | 2e-4 |
-| Embedding Dimension | {100, 200, 400} | 200 |
-| Batch Size | {256, 512, 1024} | 512 (SNOMED CT) / 1024 (others) |
-| L2 Regularization (λ) | - | 1e-5 |
-| Negative Samples | - | 50 |
-| Margin (δ) | - | 1.0 |
-| Loss Function | - | Self-adversarial negative sampling |
-| Early Stopping | - | 10 epochs (patience on val MRR) |
+The following tables summarize the optimal hyperparameters found in the paper.
 
-### SII Task Settings
+### 📈 KBC Task Settings
 
-| Parameter | Configuration | Notes |
-|-----------|---------------|-------|
-| Optimizer | Adam | For refinement stage |
-| Learning Rate | 1e-4 | Selected from {1e-5, 1e-4, 5e-4} |
-| Max Epochs | 50 | Per image refinement |
-| Perception Model | Fast R-CNN (ResNet-50) | Pre-trained backbone |
-| Input | FR-CNN detections | Initial fuzzy beliefs |
-| Task Type | Fuzzy belief optimization | Logical consistency refinement |
+| Parameter | Tuning Range | **Selected Value (DF-EL++)** | Description |
+|:----------|:-------------|:------------------------------|:------------|
+| **Optimizer** | - | `Adam` | Adaptive learning rate optimization |
+| **Learning Rate** | `{1e-4, 2e-4, 5e-4}` | `2e-4` | Step size for gradient descent |
+| **Embedding Dim** | `{100, 200, 400}` | `200` | Dimensionality of embeddings |
+| **Batch Size** | `{256, 512, 1024}` | `512` (SNOMED) / `1024` (others) | Samples per iteration |
+| **L2 Regularization** | - | `1e-5` | Weight decay coefficient |
+| **Negative Samples** | - | `50` | Number of negative samples |
+| **Early Stopping** | - | 10 epochs (patience on val MRR) | Prevents overfitting |
+
+### 🎨 SII Task Settings
+
+| Parameter | **Configuration** | Description |
+|:----------|:-----------------|:------------|
+| **Optimizer** | `Adam` | For refinement optimization |
+| **Learning Rate** | `1e-4` | Refinement step size |
+| **Max Epochs** | `50` | Per image refinement iterations |
+| **Perception Model** | Fast R-CNN (ResNet-50) | Pre-trained backbone |
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## ❓ FAQ
+
+<details>
+<summary>How to handle OOM errors?</summary>
+
+Reduce the batch size or embedding dimension:
+```bash
+python train_kbc.py --batch_size 256 --embedding_dim 100
+```
+
+</details>
+
+<details>
+<summary>Can I use my own ontology?</summary>
+
+Yes! Just ensure it's in OWL format and run:
+```bash
+python preprocess.py --input_ontology your_file.owl
+```
+
+</details>
+
+---
+
+<div align="center">
+  <sub>Built with ❤️ for the Neuro-Symbolic AI Community</sub>
+</div>

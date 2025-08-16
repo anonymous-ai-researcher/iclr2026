@@ -2,6 +2,9 @@
 This repository provides the code, data, and experimental details for the KDD 2026 paper: "Fast and Faithful: Scalable Neuro-Symbolic Learning and Reasoning with Differentiable Fuzzy EL++".
 
 ## Overview
+
+![项目概览图](./images/workflow1.png)
+
 This work introduces DF-EL++, the first end-to-end differentiable framework that unifies PTIME-complete reasoning with neural learning, resolving the persistent trade-off between logical rigor and computational scale in neuro-symbolic AI.
 
 Our framework operates as a principled refinement engine: a neural network first grounds symbols by producing an initial, uncertain fuzzy knowledge base from data. DF-EL++ then uses gradient-based optimization to repair and refine these beliefs, ensuring they cohere with an ontology's logical constraints while preserving high-confidence empirical evidence. This creates a virtuous cycle where perception is disciplined by logic, and logic is grounded in data .

@@ -3,7 +3,7 @@ This repository provides the code, data, and experimental details for the KDD 20
 
 ## Overview
 
-![项目概览图](./images/workflow1.png)
+![项目概览图](./images/flowchart1.png)
 
 This work introduces DF-EL++, the first end-to-end differentiable framework that unifies PTIME-complete reasoning with neural learning, resolving the persistent trade-off between logical rigor and computational scale in neuro-symbolic AI.
 

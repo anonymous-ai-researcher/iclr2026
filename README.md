@@ -14,7 +14,7 @@ This repository provides a from-scratch PyTorch implementation of the DF-EL++ fr
 
 <div align="center">
   <img src="./images/flowchart1.png" alt="DF-EL++ Framework Overview" width="85%">
-  <p><em>Figure 1: DF-EL++ operates as a principled refinement engine, using logical constraints to improve the output of neural perception models.</em></p>
+  <p><em>Figure 1: The DF-EL++ framework operates as a principled refinement engine, using logical constraints to improve the output of neural perception models.</em></p>
 </div>
 
 **DF-EL++** is the first end-to-end differentiable framework that unifies PTIME-complete reasoning with neural learning, resolving the persistent trade-off between logical rigor and computational scale in neuro-symbolic AI.
@@ -197,48 +197,6 @@ The following tables summarize the optimal hyperparameters found in the paper.
 | **Perception Model** | Fast R-CNN (ResNet-50) | Pre-trained backbone |
 
 ---
-
-## 📊 Results
-
-<details>
-<summary>🏆 Performance Highlights</summary>
-
-### Knowledge Base Completion Results
-
-| Dataset | **DF-EL++ (Ours)** | Best Baseline | Relative Improvement |
-|:--------|:-------------------|:--------------|:--------------------|
-| SNOMED CT | **0.847** | 0.596 | +42.1% |
-| Gene Ontology | **0.792** | 0.681 | +16.3% |
-| PASCAL-Part | **0.834** | 0.723 | +15.4% |
-
-*Metrics: Hits@1*
-
-### Semantic Image Interpretation Results
-
-| Metric | Before Refinement | **After DF-EL++** | Improvement |
-|:-------|:------------------|:------------------|:------------|
-| Logical Consistency | 62.3% | **91.7%** | +47.2% |
-| Classification Accuracy | 78.4% | **85.2%** | +8.7% |
-
-</details>
-
----
-
-## 🔄 Quick Start Guide
-
-```bash
-# 1. Preprocess your ontology
-python preprocess.py --input_ontology your_ontology.owl --output_dir data/processed
-
-# 2. Train the model
-python train_kbc.py --data_path data/processed --save_dir checkpoints/model
-
-# 3. Evaluate performance
-python evaluate_kbc.py --model_path checkpoints/model/best_model.pt --data_path data/processed
-```
-
----
-
 
 ## 📄 License
 

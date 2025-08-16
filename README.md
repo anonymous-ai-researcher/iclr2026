@@ -10,6 +10,12 @@
 
 This repository provides a from-scratch PyTorch implementation of the DF-EL++ framework, designed to be a faithful reproduction of the paper's methodology.
 
+### 📝 Note for Reviewers
+
+<div style="background-color: #f0f7ff; border-left: 4px solid #0969da; padding: 12px; margin: 20px 0;">
+<strong>📁 Extended Materials:</strong> The <code>src/</code> directory contains an extended version of the main submission with supplementary materials for the Semantic Image Interpretation (SII) task, including additional experimental details and results.
+</div>
+
 ## 📋 Overview
 
 <div align="center">

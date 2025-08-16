@@ -24,7 +24,7 @@ This repository provides a from-scratch PyTorch implementation of the DF-EL++ fr
 - ✨ **Pure Python & PyTorch**: A clean, modern implementation with no external language dependencies
 - 🔄 **Principled Refinement Engine**: Neural networks produce initial fuzzy knowledge bases, refined through gradient-based optimization
 - 📈 **Massive Scale**: Validated on ontologies like SNOMED CT with **377K concepts**
-- 🏆 **State-of-the-art Performance**: Achieves up to **42% relative improvement** in Hits@1 on Knowledge Base Completion tasks
+- 🏆 **State-of-the-art Performance**: Achieves up to **42% relative improvement** in Hits@1 on KBC tasks
 
 ---
 

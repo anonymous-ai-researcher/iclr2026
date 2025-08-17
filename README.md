@@ -1,7 +1,7 @@
 ### 📝 Note for Reviewers
 
 <div style="background-color: #f0f7ff; border-left: 4px solid #0969da; padding: 12px; margin: 20px 0;">
-The <code>src/</code> directory contains an extended version of the main submission (<code>Extended_Version_of_KDD2026_id385.pdf</code>) with supplementary materials for the Semantic Image Interpretation (SII) task, including additional experimental details and results.
+The <code>src/</code> directory contains an extended version of the main submission (<code>Extended_Version_of_KDD2026_id385.pdf</code>) with supplementary materials for the Semantic Image Interpretation (SII) task, including experimental details and results.
 </div>
 
 ---

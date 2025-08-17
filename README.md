@@ -92,7 +92,7 @@ python preprocess.py \
     --output_dir data/snomed_normalized
 ```
 
-#### 📁 Output Structure
+### 📁 Output Structure
 
 The script will create a directory containing the processed data, split into training, validation, and test sets.
 

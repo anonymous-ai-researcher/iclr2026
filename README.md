@@ -1,7 +1,7 @@
 ### 📝 Note for Reviewers
 
 <div style="background-color: #f0f7ff; border-left: 4px solid #0969da; padding: 12px; margin: 20px 0;">
-<strong>📁 Extended Materials:</strong> The <code>src/</code> directory contains an extended version of the main submission (<code>Extended_Version_of_KDD2026_id385.pdf</code>) with supplementary materials for the Semantic Image Interpretation (SII) task, including additional experimental details and results.
+The <code>src/</code> directory contains an extended version of the main submission (<code>Extended_Version_of_KDD2026_id385.pdf</code>) with supplementary materials for the Semantic Image Interpretation (SII) task, including additional experimental details and results.
 </div>
 
 ---
@@ -30,10 +30,10 @@ This repository provides a from-scratch PyTorch implementation of the DF-EL++ fr
 
 ### 🎯 Key Features
 
-- ✨ **Pure Python & PyTorch**: A clean, modern implementation with no external language dependencies
-- 🔄 **Principled Refinement Engine**: Neural networks produce initial fuzzy knowledge bases, refined through gradient-based optimization
-- 📈 **Massive Scale**: Validated on ontologies like SNOMED CT with **377K concepts**
-- 🏆 **State-of-the-art Performance**: Achieves up to **42% relative improvement** in Hits@1 on KBC tasks
+-  **Pure Python & PyTorch**: A clean, modern implementation with no external language dependencies
+-  **Principled Refinement Engine**: Neural networks produce initial fuzzy knowledge bases, refined through gradient-based optimization
+-  **Massive Scale**: Validated on ontologies like SNOMED CT with **377K concepts**
+-  **State-of-the-art Performance**: Achieves up to **42% relative improvement** in Hits@1 on KBC tasks
 
 ---
 

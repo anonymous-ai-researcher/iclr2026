@@ -14,11 +14,6 @@ This repository provides the official PyTorch implementation for **GUARDNET**. T
 
 ## 📋 Overview
 
-<div align="center">
-  <img src="https://storage.googleapis.com/gemini-prod/images/4fc4f22f-124b-4b10-a256-113e61c77f0c" alt="GUARDNET Conceptual Framework" width="85%">
-  <p><em>Figure 1: By using the 'guard' mechanism from classical logic, GUARDNET focuses reasoning on local, relevant neighborhoods within the knowledge base, avoiding the combinatorial explosion of traditional neuro-symbolic models and enabling superior generalization.</em></p>
-</div>
-
 **GUARDNET** is the first framework to leverage the **Guarded Fragment (GF)** of first-order logic as a principled inductive bias for robust and scalable neighborhood-based reasoning. It directly addresses the critical challenge of systematic generalization in deep learning, particularly in tasks requiring multi-hop inference, where existing models often fail.
 
 ### 🎯 Key Features

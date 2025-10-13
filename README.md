@@ -19,9 +19,8 @@ This repository provides the official PyTorch implementation for **GUARDNET**. T
 ### 🎯 Key Features
 
 - **Guarded Logic as Inductive Bias**: Employs the syntactic 'guard' of GF to restrict logical quantification to local, relational neighborhoods
-- **Principled Fuzzy Semantics**: Built on differentiable fuzzy logic using **Product t-norms** and **Reichenbach S-implication**
 - **Hybrid Domain Training**: Novel training strategy combining **Core Domain** with **Latent Domain** for logical fidelity and robust generalization
-- **Superior Systematic Generalization**: Exceptional performance on challenging zero-shot, multi-hop reasoning tasks
+- **Systematic Generalization**: Exceptional performance on challenging zero-shot, multi-hop reasoning tasks
 
 ---
 

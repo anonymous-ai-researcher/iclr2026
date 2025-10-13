@@ -1,59 +1,38 @@
-# main.py
+# guardnet/main.py
 
-import torch
-from utils import set_seed
-from synthetic_kb_generator import SyntheticKB
-from guardnet_model import GuardNet
-from trainer import Trainer
+import os
+from config import get_config
+from utils import set_seed, setup_logger
+from dataloader import load_dummy_data
+from model import GuardNet
+from train import Trainer
 
 def main():
-    """
-    Main execution script for the GUARDNET project.
-    """
-    # Set seed for reproducibility
-    set_seed(42)
-
-    # Configuration based on the paper's appendix and common practices
-    config = {
-        [cite_start]'embedding_dim': 200,   # [cite: 1085]
-        [cite_start]'lr': 5e-4,             # [cite: 1088]
-        [cite_start]'wd': 5e-5,             # [cite: 1088]
-        'batch_size': 16,       # Adjusted for demonstration purposes
-        'epochs': 50,
-        [cite_start]'tau': 0.1,             # Temperature for LSE approximation of quantifiers [cite: 331, 1096]
-    }
-
-    # Parameters for the Synthetic Knowledge Base
-    kb_config = {
-        'num_constants': 100,
-        'core_domain_ratio': 0.2,
-        'num_predicates': 5,
-        'num_facts': 200,
-        'num_axioms': 20
-    }
-
-    # Setup device
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(f"Using device: {device}")
-
-    # 1. Generate Synthetic Knowledge Base
-    print("Generating Synthetic Knowledge Base...")
-    kb = SyntheticKB(**kb_config)
-    kb.info()
+    # 1. Load configuration
+    config = get_config()
     
-    # 2. Initialize the GUARDNET Model
-    model = GuardNet(
-        num_constants=kb.num_constants,
-        embedding_dim=config['embedding_dim'],
-        predicate_definitions=kb.predicate_definitions,
-        device=device
-    )
+    # 2. Set up logger and random seed
+    os.makedirs(config['log_path'], exist_ok=True)
+    logger = setup_logger("Main", os.path.join(config['log_path'], "main.log"))
+    set_seed(config['seed'])
+    logger.info("Configuration loaded and seed set.")
+    logger.info(f"Using device: {config['device']}")
+
+    # 3. Load data and knowledge base
+    # TODO: Replace with actual data loading logic
+    logger.info("Loading knowledge base...")
+    kb = load_dummy_data()
     
-    # 3. Initialize the Trainer
+    # 4. Initialize the model
+    logger.info("Initializing GUARDNET model...")
+    model = GuardNet(kb, config)
+    logger.info(model)
+    
+    # 5. Initialize the trainer and start training
     trainer = Trainer(model, kb, config)
+    trainer.run()
     
-    # 4. Start the Training Process
-    trainer.train()
+    logger.info("Process finished.")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

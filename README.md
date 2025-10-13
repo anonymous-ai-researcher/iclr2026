@@ -1,39 +1,32 @@
-### 📝 Note for Reviewers
-
-<div style="background-color: #f0f7ff; border-left: 4px solid #0969da; padding: 12px; margin: 20px 0;">
-The <code>src/</code> directory contains an extended version of the main submission (<code>Extended_Version_of_KDD2026_id385.pdf</code>) with supplementary materials for a Semantic Image Interpretation (SII) task, including experimental details & results.
-</div>
-
----
-
-# DF-EL++ 🚀
+# GUARDNET 🧠
 
 [![Python](https://img.shields.io/badge/Python-3.7%2B-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-1.12%2B-red.svg)](https://pytorch.org/)
 [![CUDA](https://img.shields.io/badge/CUDA-11.6%2B-green.svg)](https://developer.nvidia.com/cuda-toolkit)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-> **Fast and Faithful: Scalable Neuro-Symbolic Learning and Reasoning with Differentiable Fuzzy EL++**  
-> *KDD 2026*
+> **Learning to Reason over Neighborhoods: A Differentiable Guarded Logic Approach**  
+> *Under review at ICLR 2026*
 
-This repository provides a from-scratch PyTorch implementation of the DF-EL++ framework, designed to be a faithful reproduction of the paper's methodology.
+This repository provides the official PyTorch implementation for **GUARDNET**. The code is designed to be a complete and faithful reproduction of the paper's methodology, enabling researchers to explore and build upon our work in scalable neuro-symbolic reasoning.
 
+---
 
 ## 📋 Overview
 
 <div align="center">
-  <img src="./images/flowchart1.png" alt="DF-EL++ Framework Overview" width="85%">
-  <p><em>Figure 1: The DF-EL++ framework operates as a principled refinement engine, using logical constraints to improve the output of neural perception models.</em></p>
+  <img src="https://storage.googleapis.com/gemini-prod/images/4fc4f22f-124b-4b10-a256-113e61c77f0c" alt="GUARDNET Conceptual Framework" width="85%">
+  <p><em>Figure 1: By using the 'guard' mechanism from classical logic, GUARDNET focuses reasoning on local, relevant neighborhoods within the knowledge base, avoiding the combinatorial explosion of traditional neuro-symbolic models and enabling superior generalization.</em></p>
 </div>
 
-**DF-EL++** is the first end-to-end differentiable framework that unifies PTIME-complete reasoning with neural learning, resolving the persistent trade-off between logical rigor and computational scale in neuro-symbolic AI.
+**GUARDNET** is the first framework to leverage the **Guarded Fragment (GF)** of first-order logic as a principled inductive bias for robust and scalable neighborhood-based reasoning. It directly addresses the critical challenge of systematic generalization in deep learning, particularly in tasks requiring multi-hop inference, where existing models often fail.
 
 ### 🎯 Key Features
 
--  **Pure Python & PyTorch**: A clean, modern implementation with no external language dependencies
--  **Principled Refinement Engine**: Neural networks produce initial fuzzy knowledge bases, refined through gradient-based optimization
--  **Massive Scale**: Validated on ontologies like SNOMED CT with **377K concepts**
--  **State-of-the-art Performance**: Achieves up to **42% relative improvement** in Hits@1 on KBC tasks
+- **Guarded Logic as Inductive Bias**: Employs the syntactic 'guard' of GF to restrict logical quantification to local, relational neighborhoods
+- **Principled Fuzzy Semantics**: Built on differentiable fuzzy logic using **Product t-norms** and **Reichenbach S-implication**
+- **Hybrid Domain Training**: Novel training strategy combining **Core Domain** with **Latent Domain** for logical fidelity and robust generalization
+- **Superior Systematic Generalization**: Exceptional performance on challenging zero-shot, multi-hop reasoning tasks
 
 ---
 
@@ -41,23 +34,22 @@ This repository provides a from-scratch PyTorch implementation of the DF-EL++ fr
 
 ### Prerequisites
 
-The framework is built entirely in Python. All experiments were designed to be run on servers equipped with NVIDIA GPUs.
+The framework is built entirely in Python. All experiments were conducted on servers equipped with NVIDIA GPUs.
 
 | Component | Version | Purpose |
 |:----------|:--------|:--------|
-| **Hardware** | NVIDIA RTX 3090+ | Recommended for GPU acceleration |
+| **Hardware** | NVIDIA RTX 4090 (24GB) | Recommended for GPU acceleration |
 | **Python** | 3.7.0+ | Core framework language |
-| **PyTorch** | 1.12+ | Deep learning backend |
+| **PyTorch** | 1.12.1+ | Deep learning backend |
 | **CUDA** | 11.6+ | For GPU support |
 
 ### Dependencies
-
 ```bash
-# 1. Clone the repository
-git clone https://github.com/your-username/DF-EL-plus-plus.git
-cd DF-EL-plus-plus
+# Clone the repository
+git clone https://github.com/your-username/guardnet.git
+cd guardnet
 
-# 2. Install Python dependencies
+# Install Python dependencies
 pip install -r requirements.txt
 ```
 
@@ -65,8 +57,8 @@ pip install -r requirements.txt
 <summary>📦 Full Dependency List</summary>
 
 ```
-torch>=1.12.0
-numpy>=1.21.4
+torch>=1.12.1
+numpy>=1.21.0
 pandas>=1.1.3
 matplotlib>=3.3.2
 scikit-learn>=0.24.0
@@ -79,159 +71,82 @@ pyparsing>=3.0.6
 
 ---
 
-## 🔧 Data Preprocessing
+## 🔧 Data Preparation
 
-### Normalization of EL++ Ontologies
+The framework expects standard knowledge base completion datasets, split into training, validation, and test sets. 
 
-The input EL++ ontology must first be normalized. Our Python script systematically decomposes complex axioms into elementary "normal forms" (NF1-NF6), preserving the original semantics while enabling stable gradient-based learning.
+The datasets referenced in the paper include:
 
-```bash
-# Run the Python-based normalization script
-python preprocess.py \
-    --input_ontology ontologies/snomed.owl \
-    --output_dir data/snomed_normalized
+- SNOMED CT
+- Gene Ontology (GO)
+- Yeast PPI
+- Human PPI
+- FB15k-237
+- WN18RR
+
+### 📁 Required Data Structure
+
+Please place your datasets inside a `data/` directory, following this structure for each dataset:
+```
+data/your_dataset_name/
+├── entities.txt      # List of all entity names, one per line
+├── relations.txt     # List of all relation (predicate) names
+├── train.txt         # Training facts (head_entity relation tail_entity)
+├── valid.txt         # Validation facts
+└── test.txt          # Test facts
 ```
 
-### 📁 Output Structure
-
-The script will create a directory containing the processed data, split into training, validation, and test sets.
-
-```
-data/snomed_normalized/
-├── concepts.txt          # Concept names
-├── roles.txt            # Role names
-├── individuals.txt      # Individual names
-├── train.txt           # 80% of normalized axioms
-├── valid.txt           # 10% of normalized axioms
-└── test.txt            # 10% of normalized axioms
-```
+The axioms (rules) for training should be provided in a separate file or defined within the data loading logic, following the syntax described in the paper.
 
 ---
 
 ## 🚀 Training & Evaluation
 
-### 📊 Knowledge Base Completion (KBC)
+The code has been structured into separate files for clarity. The main entry point is `main.py`.
 
-This task evaluates the model's ability to predict missing axioms in an ontology.
+### 🧪 Zero-Shot Multi-Hop Generalization
 
-#### 1. Training
+This is a special evaluation task designed to rigorously test the model's ability to generalize to longer reasoning chains not seen during training.
 
-Use `train_kbc.py` to train a model on a preprocessed dataset. The best model checkpoint will be saved based on validation MRR.
-
+To run this evaluation, first generate the special data splits where the training set contains only 1- and 2-hop provable facts, and the test set contains only 3+ hop facts.
 ```bash
-# Example: Training DF-EL++ on SNOMED CT
-python train_kbc.py \
-    --data_path data/snomed_normalized \
-    --embedding_dim 200 \
-    --batch_size 512 \
-    --save_dir checkpoints/snomed
-```
+# Generate the multi-hop data splits
+python generate_multihop_splits.py \
+    --data_path data/your_dataset_name \
+    --output_path data/your_dataset_name_multihop
 
-<details>
-<summary>🔧 Advanced Training Options</summary>
+# Train the model on the 1-2 hop training data
+python main.py
 
-```bash
-python train_kbc.py \
-    --data_path data/snomed_normalized \
-    --embedding_dim 200 \
-    --batch_size 512 \
-    --learning_rate 2e-4 \
-    --l2_lambda 1e-5 \
-    --negative_samples 50 \
-    --max_epochs 100 \
-    --patience 10 \
-    --save_dir checkpoints/snomed
-```
-
-</details>
-
-#### 2. Evaluation
-
-Use `evaluate_kbc.py` to evaluate a trained checkpoint on the test set.
-
-```bash
-python evaluate_kbc.py \
-    --model_path checkpoints/snomed/best_model.pt \
-    --data_path data/snomed_normalized
-```
-
-### 🖼️ Semantic Image Interpretation (SII)
-
-This task refines noisy outputs from perception models to ensure logical consistency.
-
-#### 1. Training (Refinement)
-
-The `train_sii.py` script simulates the output of a perception model and uses the DF-EL++ framework to refine the noisy beliefs according to an ontology.
-
-```bash
-# Example: Refining beliefs for the PASCAL_PART ontology
-python train_sii.py \
-    --data_path data/pascal_part_normalized
-```
-
-#### 2. Evaluation
-
-The `evaluate_sii.py` script assesses the quality of the refined beliefs using classification and logical consistency metrics.
-
-```bash
-python evaluate_sii.py \
-    --data_path data/pascal_part_normalized
+# Evaluate the trained model on the 3+ hop test data
+python evaluate.py \
+    --model_path checkpoints/best_model.pt \
+    --data_path data/your_dataset_name_multihop
 ```
 
 ---
 
 ## ⚙️ Hyperparameter Configuration
 
-The following tables summarize the optimal hyperparameters found in the paper.
+The optimal hyperparameters found in the paper are set as defaults in the `config.py` file.
 
-### 📈 KBC Task Settings
-
-| Parameter | Tuning Range | **Selected Value (DF-EL++)** | Description |
-|:----------|:-------------|:------------------------------|:------------|
-| **Optimizer** | - | `Adam` | Adaptive learning rate optimization |
-| **Learning Rate** | `{1e-4, 2e-4, 5e-4}` | `2e-4` | Step size for gradient descent |
-| **Embedding Dim** | `{100, 200, 400}` | `200` | Dimensionality of embeddings |
-| **Batch Size** | `{256, 512, 1024}` | `512` (SNOMED) / `1024` (others) | Samples per iteration |
-| **L2 Regularization** | - | `1e-5` | Weight decay coefficient |
-| **Negative Samples** | - | `50` | Number of negative samples |
-| **Early Stopping** | - | 10 epochs (patience on val MRR) | Prevents overfitting |
-
-### 🎨 SII Task Settings
-
-| Parameter | **Configuration** | Description |
-|:----------|:-----------------|:------------|
-| **Optimizer** | `Adam` | For refinement optimization |
-| **Learning Rate** | `1e-4` | Refinement step size |
-| **Max Epochs** | `50` | Per image refinement iterations |
-| **Perception Model** | Fast R-CNN (ResNet-50) | Pre-trained backbone |
+| Parameter | Selected Value | Description |
+|:----------|:--------------|:------------|
+| **Optimizer** | AdamW | Decoupled weight decay optimizer |
+| **Learning Rate** | 5e-4 | Initial learning rate |
+| **Embedding Dim** | 200 | Dimensionality of constant embeddings |
+| **Batch Size** | 512 | Samples per iteration |
+| **Weight Decay** | 5e-5 | L2 regularization coefficient |
+| **Predicate MLP** | 2 hidden layers, 256 units, ReLU | Architecture for grounding predicates |
+| **LSE Temperature** | 0.1 | Controls sharpness of quantifier approximation |
+| **Loss Curriculum** | 0.9 to 0.4 | Linearly anneals from fidelity to generalization |
+| **Early Stopping** | 15 epochs patience | Prevents overfitting |
 
 ---
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## ❓ FAQ
-
-<details>
-<summary>How to handle OOM errors?</summary>
-
-Reduce the batch size or embedding dimension:
-```bash
-python train_kbc.py --batch_size 256 --embedding_dim 100
-```
-
-</details>
-
-<details>
-<summary>Can I use my own ontology?</summary>
-
-Yes! Just ensure it's in OWL format and run:
-```bash
-python preprocess.py --input_ontology your_file.owl
-```
-
-</details>
 
 ---
 

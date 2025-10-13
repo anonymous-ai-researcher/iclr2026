@@ -71,10 +71,6 @@ The framework expects standard knowledge base completion datasets, split into tr
 
 The datasets referenced in the paper include:
 
-- SNOMED CT
-- Gene Ontology (GO)
-- Yeast PPI
-- Human PPI
 - FB15k-237
 - WN18RR
 

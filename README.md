@@ -19,8 +19,9 @@ This repository provides the official PyTorch implementation for **GUARDNET**. T
 ### 🎯 Key Features
 
 - **Guarded Logic as Inductive Bias**: Employs the syntactic 'guard' of GF to restrict logical quantification to local, relational neighborhoods
+- **Principled Fuzzy Semantics**: Built on differentiable fuzzy logic using **Product t-norms** and **Reichenbach S-implication**
 - **Hybrid Domain Training**: Novel training strategy combining **Core Domain** with **Latent Domain** for logical fidelity and robust generalization
-- **Systematic Generalization**: Exceptional performance on challenging zero-shot, multi-hop reasoning tasks
+- **Superior Systematic Generalization**: Exceptional performance on challenging zero-shot, multi-hop reasoning tasks
 
 ---
 
@@ -71,6 +72,10 @@ The framework expects standard knowledge base completion datasets, split into tr
 
 The datasets referenced in the paper include:
 
+- SNOMED CT
+- Gene Ontology (GO)
+- Yeast PPI
+- Human PPI
 - FB15k-237
 - WN18RR
 
@@ -93,6 +98,50 @@ The axioms (rules) for training should be provided in a separate file or defined
 ## 🚀 Training & Evaluation
 
 The code has been structured into separate files for clarity. The main entry point is `main.py`.
+
+### 📊 Knowledge Base Completion (KBC)
+
+This is the primary task for evaluating standard performance on concept subsumption and link prediction.
+
+#### 1. Training
+
+Use `main.py` to launch training. The script will load the configuration from `config.py`, initialize the `GuardNet` model, and run the training loop defined in `train.py`. 
+
+The best model checkpoint is saved based on validation performance.
+```bash
+# Example: Training GUARDNET on a sample dataset
+python main.py
+```
+
+<details>
+<summary>🔧 Advanced Training Configuration</summary>
+
+The `config.py` file centralizes all hyperparameters from the paper's appendix. You can modify it directly to tune the model.
+
+Key parameters include:
+
+- `embedding_dim`: Dimensionality of embeddings
+- `learning_rate`: Initial learning rate for AdamW
+- `batch_size`: Number of formulas per training batch
+- `weight_decay`: L2 regularization coefficient for AdamW
+- `lambda_start` & `lambda_end`: Curriculum parameters for the hybrid loss
+- `lse_temperature`: The temperature τ for fuzzy quantifier approximation
+
+</details>
+
+#### 2. Evaluation
+
+The evaluation logic is integrated into the training loop in `train.py`, which reports metrics after each epoch.
+
+For standalone evaluation, you can load a saved checkpoint and run it on the test set:
+```bash
+python evaluate.py \
+    --model_path checkpoints/best_model.pt \
+    --data_path data/your_dataset_name
+```
+
+The evaluation follows the filtered ranking protocol described in the paper.
+
 
 ### 🧪 Zero-Shot Multi-Hop Generalization
 
